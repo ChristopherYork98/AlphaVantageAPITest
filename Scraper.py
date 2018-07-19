@@ -1,10 +1,22 @@
-from lxml import html
-import requests
+from timeseries import TimeSeries
+import csv
+from stocks  import StockRecord, Stock
 
-page = requests.get('http://econpy.pythonanywhere.com/ex/001.html')
-tree = html.fromstring(page.content)
+myAPIkey = 'Your API KEY'
 
-buyers = tree.xpath('//div[@title="buyer-name"]/text()')
-prices = tree.xpath('//span[@class="item-price"]/text()')
+ts = TimeSeries(key=myAPIkey, output_format='csv', indexing_type='integer')
 
-print(prices)
+data, metadata = ts.get_intraday(symbol='ASX', interval='60min', outputsize='full')
+
+IND = StockRecord(symbol='IND')
+
+counter = 0
+for row in data:
+	if counter != 0:
+			newStockEntry = Stock(counter, row[1], row[4], row[2], row[3], row[5])
+			IND.addStock(newStockEntry)
+	counter+=1
+
+print(IND)
+IND.showRecords()
+print(IND)

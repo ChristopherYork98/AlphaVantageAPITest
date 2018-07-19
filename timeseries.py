@@ -1,4 +1,4 @@
-from .alphavantage import AlphaVantage as av
+from alphavantage import AlphaVantage as av
 
 
 class TimeSeries(av):
